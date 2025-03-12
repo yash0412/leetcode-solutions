@@ -16,14 +16,12 @@ function numberOfSubstrings(s) {
         abcCounts[abcIndexMap[char]]++;
         if (isAllCounted(abcCounts)) {
             subStringCount += s.length - i;
-            console.log(abcCounts, subStringCount);
             while (isAllCounted(abcCounts) && firstIndex < i) {
                 const char2 = s[firstIndex];
                 abcCounts[abcIndexMap[char2]]--;
                 firstIndex++;
                 if (isAllCounted(abcCounts)) {
                     subStringCount += s.length - i;
-                    console.log(abcCounts, subStringCount);
                 }
             }
         }
