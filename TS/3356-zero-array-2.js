@@ -23,7 +23,6 @@ function minZeroArray(nums, queries) {
         diffArray[l] -= val;
         diffArray[r + 1] += val;
         printDiffArray2(nums, diffArray);
-        console.log(nums);
     }
     return i;
 }
