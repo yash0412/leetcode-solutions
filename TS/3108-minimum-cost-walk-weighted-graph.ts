@@ -1,88 +1,47 @@
-interface EdgeMap {
-  [start: number]: {
-    [destination: number]: number[]; //costs
-  };
+const sets = Array<number>(1e5);
+
+function root(x: number): number {
+  if (sets[x] < 0) return x;
+  return (sets[x] = root(sets[x]));
 }
 
-interface QueueElem {
-  vertice: number;
-  cost: number;
+function union(x: number, y: number): void {
+  x = root(x);
+  y = root(y);
+  if (x === y) return;
+
+  if (sets[x] <= sets[y]) {
+    sets[x] += sets[y];
+    sets[y] = x;
+  } else {
+    sets[y] += sets[x];
+    sets[x] = y;
+  }
 }
 
 function minimumCost(
   n: number,
   edges: number[][],
-  query: number[][]
+  queries: number[][]
 ): number[] {
-  const minCosts: number[] = [];
-  const edgeMap: EdgeMap = {};
-  edges.forEach((edge) => {
-    const [s, d, c] = edge;
-    if (!edgeMap[s]) {
-      edgeMap[s] = {};
-    }
-    if (!edgeMap[s][d]) {
-      edgeMap[s][d] = [];
-    }
-    edgeMap[s][d].push(c);
-    if (!edgeMap[d]) {
-      edgeMap[d] = {};
-    }
-    if (!edgeMap[d][s]) {
-      edgeMap[d][s] = [];
-    }
-    edgeMap[d][s].push(c);
-  });
+  sets.fill(-1, 0, n);
 
-  query.forEach((q) => {
-    minCosts.push(minCostWalk(edgeMap, q));
-  });
-
-  return minCosts;
-}
-
-function minCostWalk(edgeMap: EdgeMap, query: number[]): number {
-  const [source, destination] = query;
-  let minCost = -1;
-  if (!edgeMap[source]) {
-    return minCost;
-  }
-  const elemQueue: QueueElem[] = [];
-
-  Object.keys(edgeMap[source]).forEach((destinationStr) => {
-    const dest = parseInt(destinationStr);
-    edgeMap[source][dest].forEach((cost) => {
-      elemQueue.push({ vertice: dest, cost: cost });
-    });
-  });
-  console.log(elemQueue);
-
-  let queueIndex = 0;
-  while (queueIndex < elemQueue.length) {
-    const elem = elemQueue[queueIndex];
-    queueIndex++;
-    if (elem.vertice === destination && elem.cost === 0) {
-      return elem.cost;
-    }
-    Object.keys(edgeMap[elem.vertice]).forEach((destinationStr) => {
-      const dest = parseInt(destinationStr);
-      edgeMap[elem.vertice][dest].forEach((cost) => {
-        if (
-          (elem.vertice === destination && (elem.cost & cost) < elem.cost) ||
-          elem.vertice !== destination
-        )
-          elemQueue.push({ vertice: dest, cost: elem.cost & cost });
-      });
-    });
-    console.log(elemQueue, elem);
-    if (queueIndex > 2) {
-      break;
-    }
+  for (const [u, v] of edges) {
+    union(u, v);
   }
 
-  return minCost;
-}
+  const costs = Array<number>(n).fill(0xfffff);
 
+  for (const [u, _, w] of edges) {
+    costs[root(u)] &= w;
+  }
+
+  return queries.map(([u, v]) => {
+    u = root(u);
+    v = root(v);
+    return u === v ? costs[u] : -1;
+  });
+}
 console.log(
   minimumCost(
     5,
