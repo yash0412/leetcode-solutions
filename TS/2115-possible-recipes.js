@@ -9,9 +9,7 @@ function findAllRecipes(recipes, ingredients, supplies) {
         return acc;
     }, {});
     const possibleRecipes = [];
-    let iterationCOunt = 0;
     while (true) {
-        iterationCOunt++;
         const anyRecipeCreated = Object.keys(recipesMap).some((recipe, index) => {
             if (recipesMap[recipe]) {
                 return false;
@@ -25,12 +23,10 @@ function findAllRecipes(recipes, ingredients, supplies) {
             }
             return false;
         });
-        console.log(suppliesMap);
         if (!anyRecipeCreated) {
             break;
         }
     }
-    console.log(iterationCOunt);
     return possibleRecipes;
 }
 console.log(findAllRecipes(['ju', 'fzjnm', 'x', 'e', 'zpmcz', 'h', 'q'], [
