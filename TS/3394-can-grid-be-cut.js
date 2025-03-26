@@ -20,7 +20,6 @@ function checkValidCuts(n, rectangles) {
     noOverlapCount = 0;
     currentCoords = 0;
     for (let [startx, starty, endx, endy] of rectangles) {
-        console.log(currentCoords);
         if (currentCoords) {
             if (currentCoords <= starty) {
                 noOverlapCount++;
@@ -33,7 +32,6 @@ function checkValidCuts(n, rectangles) {
             currentCoords = endy;
         }
     }
-    console.log(noOverlapCount);
     return false;
 }
 console.log(checkValidCuts(5, [
