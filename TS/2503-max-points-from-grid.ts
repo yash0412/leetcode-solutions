@@ -28,7 +28,12 @@ function findReachableCells(grid: number[][], query: number): number {
 
     getNeighbourCoords(currentCell, grid[0].length, grid.length).forEach(
       (neighbour) => {
-        cellsToVisit.push(neighbour);
+        if (
+          !visitedCells.has(coordsToString(neighbour)) &&
+          grid[neighbour[1]][neighbour[0]] < query
+        ) {
+          cellsToVisit.push(neighbour);
+        }
       }
     );
   }
