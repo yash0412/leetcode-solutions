@@ -1,30 +1,136 @@
 "use strict";
+class MinHeap {
+    constructor() {
+        this.heap = [];
+    }
+    // Get parent index
+    getParentIndex(index) {
+        return Math.floor((index - 1) / 2);
+    }
+    // Get left child index
+    getLeftChildIndex(index) {
+        return 2 * index + 1;
+    }
+    // Get right child index
+    getRightChildIndex(index) {
+        return 2 * index + 2;
+    }
+    // Swap two elements in the heap
+    swap(index1, index2) {
+        [this.heap[index1], this.heap[index2]] = [
+            this.heap[index2],
+            this.heap[index1],
+        ];
+    }
+    // Insert a new element into the heap
+    insert(element) {
+        this.heap.push(element);
+        this.heapifyUp();
+    }
+    // Move the element up to maintain heap order
+    heapifyUp() {
+        let index = this.heap.length - 1;
+        while (index > 0) {
+            const parentIndex = this.getParentIndex(index);
+            if (this.heap[parentIndex].value <= this.heap[index].value) {
+                break;
+            }
+            this.swap(index, parentIndex);
+            index = parentIndex;
+        }
+    }
+    // Extract and return the smallest element
+    extractMin() {
+        if (this.isEmpty()) {
+            return null;
+        }
+        if (this.heap.length === 1) {
+            return this.heap.pop();
+        }
+        const minValue = this.heap[0];
+        this.heap[0] = this.heap.pop();
+        this.heapifyDown();
+        return minValue;
+    }
+    // Move the element down to maintain heap order
+    heapifyDown() {
+        let index = 0;
+        while (true) {
+            const leftChildIndex = this.getLeftChildIndex(index);
+            const rightChildIndex = this.getRightChildIndex(index);
+            let smallestIndex = index;
+            if (leftChildIndex < this.heap.length &&
+                this.heap[leftChildIndex].value < this.heap[smallestIndex].value) {
+                smallestIndex = leftChildIndex;
+            }
+            if (rightChildIndex < this.heap.length &&
+                this.heap[rightChildIndex].value < this.heap[smallestIndex].value) {
+                smallestIndex = rightChildIndex;
+            }
+            if (smallestIndex === index) {
+                break;
+            }
+            this.swap(index, smallestIndex);
+            index = smallestIndex;
+        }
+    }
+    // Peek at the smallest element without removing it
+    peek() {
+        return this.isEmpty() ? null : this.heap[0];
+    }
+    // Return the size of the heap
+    size() {
+        return this.heap.length;
+    }
+    // Check if the heap is empty
+    isEmpty() {
+        return this.heap.length === 0;
+    }
+}
 function maxPoints(grid, queries) {
-    const answers = [];
-    queries.forEach((query) => {
-        answers.push(findReachableCells(grid, query));
+    const sortedQueries = queries.map((query, index) => ({
+        query: query,
+        originalIndex: index,
+        answer: 0,
+    }));
+    sortedQueries.sort((a, b) => a.query - b.query);
+    const visitedCells = new Set();
+    const cellsToVisit = new MinHeap();
+    cellsToVisit.insert({ value: grid[0][0], coords: [0, 0] });
+    for (let queryElem of sortedQueries) {
+        queryElem.answer = findReachableCells(grid, queryElem.query, cellsToVisit, visitedCells);
+    }
+    const answers = new Array(queries.length);
+    sortedQueries.forEach((queryElem) => {
+        answers[queryElem.originalIndex] = queryElem.answer;
     });
     return answers;
 }
-function findReachableCells(grid, query) {
-    const visitedCells = new Set();
-    const cellsToVisit = [[0, 0]];
-    while (cellsToVisit.length > 0) {
-        console.log(cellsToVisit);
-        const currentCell = cellsToVisit.shift();
+function findReachableCells(grid, query, cellsToVisit, visitedCells) {
+    while (cellsToVisit.size() > 0) {
+        const currentCellPeek = cellsToVisit.peek();
+        if (!currentCellPeek) {
+            break;
+        }
+        if (currentCellPeek.value >= query) {
+            break;
+        }
+        const currentCell = cellsToVisit.extractMin();
         if (!currentCell) {
-            continue;
+            break;
         }
-        if (grid[currentCell[1]][currentCell[0]] >= query) {
-            continue;
-        }
-        const coordsAsString = coordsToString(currentCell);
+        const coordsAsString = coordsToString(currentCell.coords);
         if (visitedCells.has(coordsAsString)) {
             continue;
         }
         visitedCells.add(coordsAsString);
-        getNeighbourCoords(currentCell, grid[0].length, grid.length).forEach((neighbour) => {
-            cellsToVisit.push(neighbour);
+        getNeighbourCoords(currentCell.coords, grid[0].length, grid.length).forEach((neighbour) => {
+            if (!visitedCells.has(coordsToString(neighbour))) {
+                cellsToVisit.insert({
+                    coords: neighbour,
+                    value: grid[neighbour[1]][neighbour[0]],
+                });
+            }
         });
     }
     return visitedCells.size;
@@ -58,64 +164,7 @@ function isValidCoords(x, y, sizex, sizey) {
     return true;
 }
 console.log(maxPoints([
-    [
-        249472, 735471, 144880, 992181, 760916, 920551, 898524, 37043, 422852,
-        194509, 714395, 325171,
-    ],
-    [
-        295872, 922051, 900801, 634980, 644237, 912433, 857189, 98466, 725226,
-        984534, 370121, 399006,
-    ],
-    [
-        618420, 573065, 587011, 298153, 694872, 12760, 880413, 593508, 474772,
-        291113, 852444, 77998,
-    ],
-    [
-        67650, 426517, 146447, 190319, 379151, 184754, 479219, 106819, 138473,
-        865661, 799297, 228827,
-    ],
-    [
-        390392, 789371, 772048, 730506, 7144, 862164, 650590, 21524, 879440,
-        396198, 408897, 851020,
-    ],
-    [
-        932044, 662093, 436861, 246956, 128943, 167432, 267483, 148325, 458128,
-        418348, 900594, 831373,
-    ],
-    [
-        742255, 795191, 598857, 441846, 243888, 777685, 313717, 560586, 257220,
-        488025, 846817, 554722,
-    ],
-    [
-        252507, 621902, 87704, 599753, 651175, 305330, 620166, 631193, 385405,
-        183376, 432598, 706692,
-    ],
-    [
-        984416, 996917, 586571, 324595, 784565, 300514, 101313, 685863, 703194,
-        729430, 732044, 349877,
-    ],
-    [
-        155629, 290992, 539879, 173659, 989930, 373725, 701670, 992137, 893024,
-        455455, 454886, 559081,
-    ],
-    [
-        252809, 641084, 632837, 764260, 68790, 732601, 349257, 208701, 613650,
-        429049, 983008, 76324,
-    ],
-    [
-        918085, 126894, 909148, 194638, 915416, 225708, 184408, 462852, 40392,
-        964501, 436864, 785076,
-    ],
-    [
-        875475, 442333, 111818, 494972, 486734, 901577, 46210, 326422, 603800,
-        176902, 315208, 225178,
-    ],
-    [
-        171174, 458473, 744971, 872087, 680060, 95371, 806370, 322605, 349331,
-        736473, 306720, 556064,
-    ],
-    [
-        207705, 587869, 129465, 543368, 840821, 977451, 399877, 486877, 327390,
-        8865, 605705, 481076,
-    ],
-], [690474]));
+    [1, 2, 3],
+    [2, 5, 7],
+    [3, 5, 1],
+], [5, 6, 2]));
