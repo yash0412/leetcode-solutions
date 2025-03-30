@@ -10,10 +10,10 @@ function isValidSudoku(board) {
             if (board[i][j] === '.') {
                 continue;
             }
-            const num = parseInt(board[i][j]);
             const rowIndex = i;
             const columnIndex = j;
             const subMatrixIndex = Math.floor(i / 3) * 3 + Math.floor(j / 3);
+            const num = board[i][j];
             if (!maps.row[rowIndex]) {
                 maps.row[rowIndex] = new Set();
             }
@@ -26,7 +26,7 @@ function isValidSudoku(board) {
             const isDuplicate = maps.row[rowIndex].has(num) ||
                 maps.column[columnIndex].has(num) ||
                 maps.subMatrix[subMatrixIndex].has(num);
-            if (num < 0 || num > 9 || isDuplicate) {
+            if (isDuplicate) {
                 return false;
             }
             maps.row[rowIndex].add(num);
