@@ -15,6 +15,8 @@ func main() {
 	// fmt.Println(lRUCache.Get(3)) // return 3
 	// fmt.Println(lRUCache.Get(4)) // return 4
 
-	fmt.Println(countGoodIntegers(5, 6))
-	fmt.Println(countGoodNumbers(1924))
+	// fmt.Println(countGoodIntegers(5, 6))
+	// fmt.Println(countGoodNumbers(1924))
+
+	fmt.Println(countGood([]int{1, 1, 1, 1, 1}, 10))
 }
