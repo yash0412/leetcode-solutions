@@ -18,5 +18,9 @@ func main() {
 	// fmt.Println(countGoodIntegers(5, 6))
 	// fmt.Println(countGoodNumbers(1924))
 
-	fmt.Println(countGood([]int{1, 1, 1, 1, 1}, 10))
+	// fmt.Println(countGood([]int{1, 1, 1, 1, 1}, 10))
+
+	fmt.Println(orangesRotting([][]int{
+		{0, 2},
+	}))
 }
