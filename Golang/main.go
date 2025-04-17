@@ -20,7 +20,9 @@ func main() {
 
 	// fmt.Println(countGood([]int{1, 1, 1, 1, 1}, 10))
 
-	fmt.Println(orangesRotting([][]int{
-		{0, 2},
-	}))
+	// fmt.Println(orangesRotting([][]int{
+	// 	{0, 2},
+	// }))
+
+	fmt.Println(countPairs([]int{3, 1, 2, 2, 2, 1, 3}, 2))
 }
