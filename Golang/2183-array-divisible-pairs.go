@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func countPairs2(nums []int, k int) int64 {
 	pairsCount := int64(0)
 	seenMap := make(map[int]int64)
@@ -9,7 +11,9 @@ func countPairs2(nums []int, k int) int64 {
 			seenMap[num] = 0
 		}
 		previousCount := seenMap[num]
-		
+
+		fmt.Println(previousCount, i)
+
 		seenMap[num]++
 	}
 

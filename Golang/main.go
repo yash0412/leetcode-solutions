@@ -24,5 +24,6 @@ func main() {
 	// 	{0, 2},
 	// }))
 
-	fmt.Println(countPairs([]int{3, 1, 2, 2, 2, 1, 3}, 2))
+	// fmt.Println(countPairs([]int{3, 1, 2, 2, 2, 1, 3}, 2))
+	fmt.Println(countCompleteSubarrays([]int{5, 5, 5, 5}))
 }
