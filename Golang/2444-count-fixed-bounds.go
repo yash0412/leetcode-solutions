@@ -1,6 +1,6 @@
 package main
 
-func countSubarrays(nums []int, minK int, maxK int) int64 {
+func countSubarrays2(nums []int, minK int, maxK int) int64 {
 	inclusiveArr := make([][2]int, 0)
 	start := -1
 	subArrayCount := int64(0)
