@@ -1,4 +1,4 @@
-class MinHeapClass {
+class MinHeapClass2 {
   private heap: number[] = [];
 
   private getParentIndex(index: number) {
@@ -88,7 +88,7 @@ class MinHeapClass {
 }
 
 function TestMinHeap() {
-  const minHeap = new MinHeapClass();
+  const minHeap = new MinHeapClass2();
   console.log(minHeap.peek());
   console.log(minHeap.pop());
   console.log(minHeap.insert(1));
