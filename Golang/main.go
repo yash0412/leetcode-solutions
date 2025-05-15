@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 	// fmt.Println(minOperations([]int{1, 1, 2, 4, 9}, 20))
 	// lRUCache := Constructor(2)
@@ -27,5 +29,6 @@ func main() {
 	// fmt.Println(countInterestingSubarrays([]int{3, 1, 9, 6}, 3, 0))
 	// fmt.Println(countSubarrays([]int{1, 1, 1, 1}, 1, 1))
 	// fmt.Println(countSubarrays([]int{2, 1, 4, 3, 5}, 10))
-	TestStack()
+	// TestStack()
+	fmt.Println(getLongestSubsequence([]string{"e", "a", "b"}, []int{0, 0, 1}))
 }
